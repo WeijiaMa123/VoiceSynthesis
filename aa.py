@@ -59,7 +59,6 @@ while len(input_bytes) > 0:
              
 
 print('* Finished')
-print(a[0:20])
 stream.stop_stream()
 stream.close()
 p.terminate()
@@ -79,22 +78,45 @@ beta = regr.coef_
 print(beta)
 
 yhat = regr.predict(X)
-print(y-yhat)
-plt.figure(figsize=(10, 5))
+error = y-yhat
 
-# Plot actual values
-plt.plot(y[0:100], label="Actual Values", color="blue")
-
-# Plot predicted values
-plt.plot(yhat[0:100], label="Predicted Values", color="red", linestyle="dashed")
+mean_e = np.mean(error)
+s_e = np.std(error)
+print("mean of error:", mean_e)
+print("variance of error:", s_e)
 
 
-plt.xlabel("Sample Index")
-plt.ylabel("Amplitude")
-plt.title("Actual vs. Predicted Values with Error Shading")
-plt.legend()
-plt.grid()
 
+# Plot results with two subplots
+fig, axs = plt.subplots(3, 1, figsize=(10, 8), sharex=False)
+
+# Plot actual vs. predicted
+axs[0].plot(y, label="Actual", color="blue")
+axs[0].plot(yhat, label="Predicted", color="red", linestyle="dashed")
+axs[0].set_ylabel("Amplitude")
+axs[0].set_title("Actual vs. Predicted Values")
+axs[0].legend()
+axs[0].grid()
+
+# Plot error in separate subplot
+axs[1].plot(error, label="Error", color="black")
+axs[1].set_xlabel("Samples")
+axs[1].set_ylabel("Error")
+axs[1].set_title("Prediction Error")
+axs[1].legend()
+axs[1].grid()
+
+
+# Plot histogram of error in third subplot
+axs[2].hist(error, bins=50, color="gray", edgecolor="black", alpha=0.7)
+axs[2].set_xlabel("Error Amplitude")
+axs[2].set_ylabel("Frequency")
+axs[2].set_title("Histogram of Prediction Error")
+axs[2].set_xlim(-100, 100)  
+axs[2].grid()
+
+
+
+# Show the plots
+plt.tight_layout()
 plt.show()
-print(yhat[0:20])
-print(y[0:20])

@@ -1,7 +1,7 @@
 close all; clear all; clc;
 
 %% load audio
-[x, fs] = audioread('aa.wav');
+[x, fs] = audioread('ee.wav');
 
 x = mean(x, 2); % mono
 x = 0.9*x/max(abs(x)); % normalize
@@ -13,7 +13,7 @@ w = hann(floor(0.03*fs), 'periodic'); % using 30ms Hann window
 
 
 %% LPC encode 
-p = 6; % using 6th order
+p = 12; % using 6th order
 
 % (1) Compute LPC coefficients and error power
 [a, G] = lpc(x, p);      % a is length p+1, a(1)=1
@@ -23,7 +23,7 @@ residual = filter(a, 1, x);
 
 % (3) Reconstruct signal by applying the inverse filter to the residual
 excitation = randn(size(x))/500;
-pitch_period = 300;
+pitch_period = 80;
 
 for n = 1 : pitch_period : length(x)
     excitation(n) = excitation(n) + 0.1;
